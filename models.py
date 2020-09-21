@@ -6,7 +6,7 @@ class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     slug = db.Column(db.String(120), unique=True)
     name = db.Column(db.String(120))
-    position = db.Column(db.String(2))
+    position = db.Column(db.String(10))
     shoots = db.Column(db.String(120))
     height = db.Column(db.String(4))
     weight = db.Column(db.Integer)
@@ -35,53 +35,33 @@ class SkaterSeason(db.Model):
     season = db.Column(db.String(7))
     age = db.Column(db.Integer)
     team = db.Column(db.String(3))
-    league = db.Column(db.String(4))
+    lg_id = db.Column(db.String(4))
     games_played = db.Column(db.Integer)
     goals = db.Column(db.Integer)
     assists = db.Column(db.Integer)
     points = db.Column(db.Integer)
-    penalty_minutes = db.Column(db.Integer)
-    even_strength_goals = db.Column(db.Integer)
-    power_play_goals = db.Column(db.Integer)
-    short_handed_goals = db.Column(db.Integer)
-    game_winning_goals = db.Column(db.Integer)
-    even_strength_assists = db.Column(db.Integer)
-    power_play_assists = db.Column(db.Integer)
-    short_handed_assists = db.Column(db.Integer)
+    plus_minus = db.Column(db.Integer)
+    pen_min = db.Column(db.Integer)
+    goals_ev = db.Column(db.Integer)
+    goals_pp = db.Column(db.Integer)
+    goals_sh = db.Column(db.Integer)
+    goals_gw = db.Column(db.Integer)
+    assists_ev = db.Column(db.Integer)
+    assists_pp = db.Column(db.Integer)
+    assists_sh = db.Column(db.Integer)
     shots = db.Column(db.Integer)
     shot_percentage = db.Column(db.Float)
     time_on_ice = db.Column(db.Integer)
-    average_time_on_ice = db.Column(db.Integer)
-    awards = db.Column(db.String)
+    time_on_ice_avg = db.Column(db.Float)
+    award_summary = db.Column(db.String)
     is_playoffs = db.Column(db.Boolean)
     won_cup = db.Column(db.Boolean)
 
-    def __init__(self, player_id, season, age, team, league, games_played, goals, assists, points, penalty_minutes, even_strength_goals, power_play_goals, short_handed_goals, game_winning_goals, even_strength_assists, power_play_assists, short_handed_assists, shots, shot_percentage, time_on_ice, average_time_on_ice, awards, is_playoffs, won_cup):
-
+    def __init__(self, player_id, season, team):
         self.player_id = player_id
         self.season = season
-        self.age = age
         self.team = team
-        self.league = league
-        self.games_played = games_played
-        self.goals = goals
-        self.assists = assists
-        self.points = points
-        self.penalty_minutes = penalty_minutes 
-        self.even_strength_goals = even_strength_goals
-        self.power_play_goals = power_play_goals
-        self.short_handed_goals = short_handed_goals
-        self.game_winning_goals = game_winning_goals
-        self.even_strength_assists = even_strength_assists
-        self.power_play_assists = power_play_goals
-        self.short_handed_assists = short_handed_assists
-        self.shots = shots
-        self.shot_percentage = shot_percentage
-        self.time_on_ice = time_on_ice
-        self.average_time_on_ice = average_time_on_ice
-        self.awards = awards
-        self.is_playoffs = is_playoffs
-        self.won_cup = won_cup
+
 
 class GoalieSeason(db.Model):
     __table_args__ = {'schema': 'hockey'}
