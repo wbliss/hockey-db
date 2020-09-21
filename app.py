@@ -18,6 +18,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
-app.secret_key = os.environ['secret_key']
+app.secret_key = SECRET_KEY
 
 
