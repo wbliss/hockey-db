@@ -103,7 +103,7 @@ def get_player_info(url, position):
     if position != 'G':
         total_stats = parse_skater(tree)
         season = map_skater(player, total_stats)
-    time.sleep(4)
+    time.sleep(2)
 
 def parse_skater(tree):
 
