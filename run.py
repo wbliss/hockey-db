@@ -58,7 +58,8 @@ def get_link_position(player):
 
 def parse_letter(letter):
 
-    r = requests.get('https://www.hockey-reference.com/players/{}/'.format(letter))
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36'}
+    r = requests.get('https://www.hockey-reference.com/players/{}/'.format(letter), headers=headers)
 
     tree = html.fromstring(r.content)
     players = tree.xpath('//div[@id="div_players"]/p[@class="nhl"]')
@@ -103,7 +104,7 @@ def get_player_info(url, position):
     if position != 'G':
         total_stats = parse_skater(tree)
         season = map_skater(player, total_stats)
-    time.sleep(2)
+    time.sleep(5)
 
 def parse_skater(tree):
 
