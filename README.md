@@ -1,3 +1,3 @@
 # hockey-db
 
-small and shitty parser for a database
+small and shitty scraper for a database
