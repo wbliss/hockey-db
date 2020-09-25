@@ -1,5 +1,6 @@
 from lxml import html
 import requests
+from requests.exceptions import ConnectionError
 import dateparser
 import re
 import time
@@ -67,9 +68,29 @@ def parse_letter(letter):
     for player in players:
         
         url, position = get_link_position(player)
-        get_player_info(url, position)
+        try:
+            get_player_info(url, position)
+        except ConnectionError:
+            db.session.commit()
+            time.sleep(60 * 10)
+            get_player_info(url, position)
 
     db.session.commit()
+
+def get_birthplace(tree):
+
+    birth_link = tree.xpath('//span[@itemprop="birthPlace"]/a')[0].get('href')
+    locations = birth_link.split('?')[1].split('&')
+    country = locations[0].split('=')[1]
+    
+    if country == "CA":
+        state = locations[1].split('=')[1]
+    elif country == "US":
+        state = locations[2].split('=')[1]
+    else:
+        state = None
+
+    return (country, state)
 
 def get_player_info(url, position):
 
@@ -93,18 +114,23 @@ def get_player_info(url, position):
         height = tree.xpath('//*[@id="meta"]/div/p/span[@itemprop="height"]/text()')[0]
     except IndexError:
         height = None
-    # nationality = tree.xpath('//*[@itemprop="birthPlace"]/a/@href') # regex needed to get url
+
+    try:
+        country, state = get_birthplace(tree)
+    except IndexError:
+        country, state = None, None
+
     is_hof = True if 'Hall of Fame' in tree.xpath(
         '//*[@class="important special"]/a/text()') else False
 
-    player = Player(slug, name, position, shoots, height, weight, dob, is_hof)
+    player = Player(slug, name, position, shoots, height, weight, dob, is_hof, country, state)
 
     db.session.add(player)
     db.session.flush()
     if position != 'G':
         total_stats = parse_skater(tree)
         season = map_skater(player, total_stats)
-    time.sleep(5)
+    time.sleep(30)
 
 def parse_skater(tree):
 
@@ -176,5 +202,8 @@ def map_skater(player, total_stats):
 
 if __name__ == '__main__':
 
+    db.drop_all()
+    db.create_all()
     for letter in ALPHABET:
         parse_letter(letter)
+    db.session.commit()

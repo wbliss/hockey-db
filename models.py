@@ -12,9 +12,10 @@ class Player(db.Model):
     weight = db.Column(db.Integer)
     dob = db.Column(db.Date)
     is_hof = db.Column(db.Boolean)
-    #nationality = db.Column(db.String(50))
+    country = db.Column(db.String(2))
+    state = db.Column(db.String(2))
 
-    def __init__(self, slug, name, position, shoots, height, weight, dob, is_hof):
+    def __init__(self, slug, name, position, shoots, height, weight, dob, is_hof, country, state):
 
         self.slug = slug
         self.name = name
@@ -24,7 +25,8 @@ class Player(db.Model):
         self.weight = weight
         self.dob = dob
         self.is_hof = is_hof
-        #self.nationality = nationality
+        self.country = country
+        self.state = state
 
 
 class SkaterSeason(db.Model):
