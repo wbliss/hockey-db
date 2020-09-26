@@ -70,7 +70,7 @@ def parse_letter(letter):
         url, position = get_link_position(player)
         try:
             get_player_info(url, position)
-        except ConnectionError:
+        except ConnectionError:  # if connection error commit then wait 10 minutes
             db.session.commit()
             time.sleep(60 * 10)
             get_player_info(url, position)
@@ -97,7 +97,7 @@ def get_player_info(url, position):
     r = requests.get('https://www.hockey-reference.com' + url)
 
     tree = html.fromstring(r.content)
-    slug = None
+    slug = url.split('/')[3]
     name = tree.xpath('//h1[@itemprop="name"]/span/text()')[0]
 
     try:
@@ -191,14 +191,6 @@ def map_skater(player, total_stats):
                 setattr(season, stat, value)
             db.session.add(season)
             
-
-
-
-
-"""db.drop_all()
-    db.create_all()
-    get_player_info('https://www.hockey-reference.com/players/a/appssy01.html', 'C')
-    db.session.commit()"""
 
 if __name__ == '__main__':
 
